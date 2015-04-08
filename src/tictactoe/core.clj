@@ -1,18 +1,23 @@
 (ns tictactoe.core)
 
+; Require Clojure numeric-tower library
+(require '[clojure.math.numeric-tower :as math])
+
 ; Imports
-(import `javax.swing.JButton)
-(import `javax.swing.JPanel)
-(import `javax.swing.JFrame)
-(import `java.awt.event.ActionListener)
-(import `java.awt.GridLayout)
-(import `java.awt.Font)
-(import `javax.swing.JOptionPane)
+(import 'javax.swing.JButton)
+(import 'javax.swing.JPanel)
+(import 'javax.swing.JFrame)
+(import 'java.awt.event.ActionListener)
+(import 'java.awt.GridLayout)
+(import 'java.awt.Font)
+(import 'javax.swing.JOptionPane)
 
-(defn checkMatrix [x y] 
-)
+(defn runGame []
+	; Define some variables
+	(def playerScore 0)
+	(def computerScore 0)
+	(def matrix '(0 0 0 0 0 0 0 0 0))
 
-(defn buildFrame []
 	; Define the frame
 	(def frame (JFrame. "Tic Tac Toe"))
 	(.setDefaultCloseOperation frame JFrame/EXIT_ON_CLOSE)
@@ -67,7 +72,10 @@
         (actionPerformed [event]
         	(.setText (.getSource event) "X")
         	(.setEnabled (.getSource event) false)
-           	; (JOptionPane/showMessageDialog nil "Picked", "Title" JOptionPane/INFORMATION_MESSAGE)
+        	; Perform computer actions now
+        	; Generate random number
+        	(def tile (int (math/floor (rand 8))))
+        	; Time for the computer to make a move
     )))
 
 	; Event listeners
@@ -85,9 +93,11 @@
 
 	; Show the frame
 	(.setVisible frame true)
+
+	; Show the GUI
+	(JOptionPane/showMessageDialog nil "Welcome to Tic Tac Toe! Press OK to begin.", "Tic Tac Toe" JOptionPane/INFORMATION_MESSAGE)
 )
 
 (defn -main [& args] (
-	buildFrame
-	; While true loop here. However that's written.
+	runGame
 ))
