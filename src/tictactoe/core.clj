@@ -2,6 +2,7 @@
 
 ; Require Clojure numeric-tower library
 (require '[clojure.math.numeric-tower :as math])
+(require '[clojure.set :as set])
 
 ; Imports
 (import 'javax.swing.JButton)
@@ -16,7 +17,8 @@
 	; Define some variables
 	(def playerScore 0)
 	(def computerScore 0)
-	(def matrix '(0 0 0 0 0 0 0 0 0))
+	(def playerX '#{})
+	(def playerO '#{})
 
 	; Define the frame
 	(def frame (JFrame. "Tic Tac Toe"))
@@ -70,12 +72,75 @@
 	(def buttonAction
         (proxy [ActionListener] []
         (actionPerformed [event]
-        	(.setText (.getSource event) "X")
+        	; Player's choice
+        	(.setText (.getSource event) "O")
         	(.setEnabled (.getSource event) false)
+
+
+
+
+        	; Determine which button was clicked and add to moves list.
+
+
+
+
+
         	; Perform computer actions now
         	; Generate random number
-        	(def tile (int (math/floor (rand 8))))
-        	; Time for the computer to make a move
+        	(def available (seq (set/intersection (set/union playerX playerO) playerX)))
+        	(def totalSpots (- 8 (count available)))
+        	(def tile (int (math/floor (rand totalSpots))))
+        	; Redefine playerX with the new selection
+        	(def playerX (conj playerX tile))
+        	; Now just mark the right button with X
+        	; Row 1
+        	(if (= tile 0) (
+        	(fn [] 
+        		(.setText btn_x1y1 "X")
+        		(.setEnabled btn_x1y1 false)
+        	)))
+        	(if (= tile 1) (
+        	(fn [] 
+        		(.setText btn_x1y2 "X")
+        		(.setEnabled btn_x1y2 false)
+        	)))
+        	(if (= tile 2) (
+        	(fn [] 
+        		(.setText btn_x1y3 "X")
+        		(.setEnabled btn_x1y3 false)
+        	)))
+        	; Row 2
+        	(if (= tile 3) (
+        	(fn [] 
+        		(.setText btn_x2y1 "X")
+        		(.setEnabled btn_x2y1 false)
+        	)))
+        	(if (= tile 4) (
+        	(fn [] 
+        		(.setText btn_x2y2 "X")
+        		(.setEnabled btn_x2y2 false)
+        	)))
+        	(if (= tile 5) (
+        	(fn [] 
+        		(.setText btn_x2y3 "X")
+        		(.setEnabled btn_x2y3 false)
+        	)))
+        	; Row 3
+        	(if (= tile 6) (
+        	(fn [] 
+        		(.setText btn_x3y1 "X")
+        		(.setEnabled btn_x3y1 false)
+        	)))
+        	(if (= tile 7) (
+        	(fn [] 
+        		(.setText btn_x3y2 "X")
+        		(.setEnabled btn_x3y2 false)
+        	)))
+        	(if (= tile 8) (
+        	(fn [] 
+        		(.setText btn_x3y3 "X")
+        		(.setEnabled btn_x3y3 false)
+        	)))
     )))
 
 	; Event listeners
@@ -98,6 +163,7 @@
 	(JOptionPane/showMessageDialog nil "Welcome to Tic Tac Toe! Press OK to begin.", "Tic Tac Toe" JOptionPane/INFORMATION_MESSAGE)
 )
 
+; Main function/entry point for application
 (defn -main [& args] (
 	runGame
 ))
