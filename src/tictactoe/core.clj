@@ -81,6 +81,36 @@
 	(.add panel btn_x3y2)
 	(.add panel btn_x3y3)
 
+	; Declare no winner
+	(defn declareNoWinner[]
+		(JOptionPane/showMessageDialog nil "The game is a tie!" "Tie Game" JOptionPane/INFORMATION_MESSAGE)
+		; Row 1
+		(.setText btn_x1y1 "")
+		(.setEnabled btn_x1y1 true)
+		(.setText btn_x1y2 "")
+		(.setEnabled btn_x1y2 true)
+		(.setText btn_x1y3 "")
+		(.setEnabled btn_x1y3 true)
+		; Row 2
+		(.setText btn_x2y1 "")
+		(.setEnabled btn_x2y1 true)
+		(.setText btn_x2y2 "")
+		(.setEnabled btn_x2y2 true)
+		(.setText btn_x2y3 "")
+		(.setEnabled btn_x2y3 true)
+		; Row 3
+		(.setText btn_x3y1 "")
+		(.setEnabled btn_x3y1 true)
+		(.setText btn_x3y2 "")
+		(.setEnabled btn_x3y2 true)
+		(.setText btn_x3y3 "")
+		(.setEnabled btn_x3y3 true)
+
+		; Reset tracking
+		(def playerO '#{})
+		(def playerX '#{})
+	)
+
 	; Declare player O as the winner
 	(defn declarePlayerO []
 		(JOptionPane/showMessageDialog nil "Player O has won the game!" "Player O Won!" JOptionPane/INFORMATION_MESSAGE)
@@ -174,6 +204,8 @@
 				(= (count (set/intersection playerX d2)) 3))
 			(declarePlayerX)
 		)
+		; Check no win
+		(if (= (count (set/union playerX playerO)) 9) (declareNoWinner))
 	)
 
 	; Define action listener for the button click
