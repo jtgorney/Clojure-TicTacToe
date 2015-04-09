@@ -1,10 +1,9 @@
 ; Author: Jacob Gorney
 
-(ns tictactoe.core)
-
-; Require Clojure numeric-tower library
-(require '[clojure.math.numeric-tower :as math])
-(require '[clojure.set :as set])
+(ns tictactoe.core
+	(:require [clojure.math.numeric-tower :as math]
+	:require [clojure.set :as set])
+	(:gen-class))
 
 ; Imports
 (import 'javax.swing.JButton)
