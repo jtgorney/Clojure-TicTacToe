@@ -1,3 +1,5 @@
+; Author: Jacob Gorney
+
 (ns tictactoe.core)
 
 ; Require Clojure numeric-tower library
@@ -17,6 +19,7 @@
 	; Define some variables
 	(def playerScore 0)
 	(def computerScore 0)
+	(def tieScore 0)
 	(def playerX '#{})
 	(def playerO '#{})
 	(def allNums '#{0 1 2 3 4 5 6 7 8})
@@ -81,9 +84,16 @@
 	(.add panel btn_x3y2)
 	(.add panel btn_x3y3)
 
+	; Show the score
+	(defn showScores []
+		(JOptionPane/showMessageDialog nil (clojure.string/join ["Scoreboard:\n\n", "Player: " playerScore, "\n" "Computer: " computerScore "\n" "Ties: " tieScore]) "Scoreboard" JOptionPane/INFORMATION_MESSAGE)
+	)
+
 	; Declare no winner
 	(defn declareNoWinner[]
+		(def tieScore (+ tieScore 1))
 		(JOptionPane/showMessageDialog nil "The game is a tie!" "Tie Game" JOptionPane/INFORMATION_MESSAGE)
+		(showScores)
 		; Row 1
 		(.setText btn_x1y1 "")
 		(.setEnabled btn_x1y1 true)
@@ -113,7 +123,9 @@
 
 	; Declare player O as the winner
 	(defn declarePlayerO []
+		(def playerScore (+ playerScore 1))
 		(JOptionPane/showMessageDialog nil "Player O has won the game!" "Player O Won!" JOptionPane/INFORMATION_MESSAGE)
+		(showScores)
 		; Row 1
 		(.setText btn_x1y1 "")
 		(.setEnabled btn_x1y1 true)
@@ -143,7 +155,9 @@
 
 	; Declare player X as winner
 	(defn declarePlayerX []
+		(def computerScore (+ computerScore 1))
 		(JOptionPane/showMessageDialog nil "Player X has won the game!" "Player X Won!" JOptionPane/INFORMATION_MESSAGE)
+		(showScores)
 		; Row 1
 		(.setText btn_x1y1 "")
 		(.setEnabled btn_x1y1 true)
