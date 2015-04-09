@@ -13,11 +13,6 @@
 (import 'java.awt.Font)
 (import 'javax.swing.JOptionPane)
 
-; Check the game for a winner.
-(defn checkGame []
-
-)
-
 (defn runGame []
 	; Define some variables
 	(def playerScore 0)
@@ -86,6 +81,101 @@
 	(.add panel btn_x3y2)
 	(.add panel btn_x3y3)
 
+	; Declare player O as the winner
+	(defn declarePlayerO []
+		(JOptionPane/showMessageDialog nil "Player O has won the game!" "Player O Won!" JOptionPane/INFORMATION_MESSAGE)
+		; Row 1
+		(.setText btn_x1y1 "")
+		(.setEnabled btn_x1y1 true)
+		(.setText btn_x1y2 "")
+		(.setEnabled btn_x1y2 true)
+		(.setText btn_x1y3 "")
+		(.setEnabled btn_x1y3 true)
+		; Row 2
+		(.setText btn_x2y1 "")
+		(.setEnabled btn_x2y1 true)
+		(.setText btn_x2y2 "")
+		(.setEnabled btn_x2y2 true)
+		(.setText btn_x2y3 "")
+		(.setEnabled btn_x2y3 true)
+		; Row 3
+		(.setText btn_x3y1 "")
+		(.setEnabled btn_x3y1 true)
+		(.setText btn_x3y2 "")
+		(.setEnabled btn_x3y2 true)
+		(.setText btn_x3y3 "")
+		(.setEnabled btn_x3y3 true)
+
+		; Reset tracking
+		(def playerO '#{})
+		(def playerX '#{})
+	)
+
+	; Declare player X as winner
+	(defn declarePlayerX []
+		(JOptionPane/showMessageDialog nil "Player X has won the game!" "Player X Won!" JOptionPane/INFORMATION_MESSAGE)
+		; Row 1
+		(.setText btn_x1y1 "")
+		(.setEnabled btn_x1y1 true)
+		(.setText btn_x1y2 "")
+		(.setEnabled btn_x1y2 true)
+		(.setText btn_x1y3 "")
+		(.setEnabled btn_x1y3 true)
+		; Row 2
+		(.setText btn_x2y1 "")
+		(.setEnabled btn_x2y1 true)
+		(.setText btn_x2y2 "")
+		(.setEnabled btn_x2y2 true)
+		(.setText btn_x2y3 "")
+		(.setEnabled btn_x2y3 true)
+		; Row 3
+		(.setText btn_x3y1 "")
+		(.setEnabled btn_x3y1 true)
+		(.setText btn_x3y2 "")
+		(.setEnabled btn_x3y2 true)
+		(.setText btn_x3y3 "")
+		(.setEnabled btn_x3y3 true)
+
+		; Reset tracking
+		(def playerO '#{})
+		(def playerX '#{})
+	)
+
+	; Check the game for a winner.
+	(defn checkGame []
+		; Define in which constitutes a win
+		(def h1 '#{0 1 2}) ; Row 1
+		(def h2 '#{3 4 5}) ; Row 2
+		(def h3 '#{6 7 8}) ; Row 3
+		(def v1 '#{0 3 6}) ; Col 1
+		(def v2 '#{1 4 7}) ; Col 2
+		(def v3 '#{2 5 8}) ; Col 3
+		(def d1 '#{0 4 8}) ; Diagonal 1
+		(def d2 '#{0 4 8}) ; Diagonal 2
+		; Check player O
+		(if (or (= (count (set/intersection playerO h1)) 3)
+				(= (count (set/intersection playerO h2)) 3)
+				(= (count (set/intersection playerO h3)) 3)
+				(= (count (set/intersection playerO v1)) 3)
+				(= (count (set/intersection playerO v2)) 3)
+				(= (count (set/intersection playerO v3)) 3)
+				(= (count (set/intersection playerO d1)) 3)
+				(= (count (set/intersection playerO d2)) 3))
+			(declarePlayerO)
+		)
+		; Check player X
+		(if (or (= (count (set/intersection playerX h1)) 3)
+				(= (count (set/intersection playerX h2)) 3)
+				(= (count (set/intersection playerX h3)) 3)
+				(= (count (set/intersection playerX v1)) 3)
+				(= (count (set/intersection playerX v2)) 3)
+				(= (count (set/intersection playerX v3)) 3)
+				(= (count (set/intersection playerX d1)) 3)
+				(= (count (set/intersection playerX d2)) 3))
+			(declarePlayerX)
+		)
+	)
+
 	; Define action listener for the button click
 	(def buttonAction
         (proxy [ActionListener] []
@@ -97,6 +187,7 @@
         	; Get the selected tile and add to the set
         	(def selected (. Integer parseInt (.getName (.getSource event))))
         	(def playerO (conj playerO selected))
+        	(checkGame)
         	; Perform computer actions now
         	; Generate random number
         	(def available (seq (set/difference allNums (set/union playerX playerO))))
@@ -152,6 +243,8 @@
         		(.setText btn_x3y3 "X")
         		(.setEnabled btn_x3y3 false)
         	)))
+
+        	(checkGame)
     )))
 
 	; Event listeners
@@ -171,7 +264,7 @@
 	(.setVisible frame true)
 
 	; Show the GUI
-	(JOptionPane/showMessageDialog nil "Welcome to Tic Tac Toe! Press OK to begin.", "Tic Tac Toe" JOptionPane/INFORMATION_MESSAGE)
+	(JOptionPane/showMessageDialog nil "Welcome to Tic Tac Toe! Press OK to begin." "Tic Tac Toe" JOptionPane/INFORMATION_MESSAGE)
 )
 
 ; Main function/entry point for application
