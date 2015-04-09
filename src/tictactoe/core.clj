@@ -23,6 +23,7 @@
 	(def playerX '#{})
 	(def playerO '#{})
 	(def allNums '#{0 1 2 3 4 5 6 7 8})
+	(def playerStarts true)
 
 	; Define the frame
 	(def frame (JFrame. "Tic Tac Toe"))
@@ -94,6 +95,12 @@
 		(def tieScore (+ tieScore 1))
 		(JOptionPane/showMessageDialog nil "The game is a tie!" "Tie Game" JOptionPane/INFORMATION_MESSAGE)
 		(showScores)
+		; Ask if we want to keep playing
+		(def continuePlaying
+			(JOptionPane/showConfirmDialog nil "Do you want to play another game?" "Play Another Game" JOptionPane/YES_NO_OPTION)
+		)
+		; Exit the system
+		(if (not (= continuePlaying 0)) ((System/exit 0)))
 		; Row 1
 		(.setText btn_x1y1 "")
 		(.setEnabled btn_x1y1 true)
@@ -119,6 +126,9 @@
 		; Reset tracking
 		(def playerO '#{})
 		(def playerX '#{})
+
+		; Switch who starts
+		(if playerStarts (def playerStarts false) (def playerStarts true))
 	)
 
 	; Declare player O as the winner
@@ -126,6 +136,12 @@
 		(def playerScore (+ playerScore 1))
 		(JOptionPane/showMessageDialog nil "Player O has won the game!" "Player O Won!" JOptionPane/INFORMATION_MESSAGE)
 		(showScores)
+		; Ask if we want to keep playing
+		(def continuePlaying
+			(JOptionPane/showConfirmDialog nil "Do you want to play another game?" "Play Another Game" JOptionPane/YES_NO_OPTION)
+		)
+		; Exit the system
+		(if (not (= continuePlaying 0)) ((System/exit 0)))
 		; Row 1
 		(.setText btn_x1y1 "")
 		(.setEnabled btn_x1y1 true)
@@ -151,6 +167,9 @@
 		; Reset tracking
 		(def playerO '#{})
 		(def playerX '#{})
+
+		; Switch who starts
+		(if playerStarts (def playerStarts false) (def playerStarts true))
 	)
 
 	; Declare player X as winner
@@ -158,6 +177,12 @@
 		(def computerScore (+ computerScore 1))
 		(JOptionPane/showMessageDialog nil "Player X has won the game!" "Player X Won!" JOptionPane/INFORMATION_MESSAGE)
 		(showScores)
+		; Ask if we want to keep playing
+		(def continuePlaying
+			(JOptionPane/showConfirmDialog nil "Do you want to play another game?" "Play Another Game" JOptionPane/YES_NO_OPTION)
+		)
+		; Exit the system
+		(if (not (= continuePlaying 0)) ((System/exit 0)))
 		; Row 1
 		(.setText btn_x1y1 "")
 		(.setEnabled btn_x1y1 true)
@@ -183,6 +208,9 @@
 		; Reset tracking
 		(def playerO '#{})
 		(def playerX '#{})
+
+		; Switch who starts
+		(if playerStarts (def playerStarts false) (def playerStarts true))
 	)
 
 	; Check the game for a winner.
@@ -221,76 +249,153 @@
 		; Check no win
 		(if (= (count (set/union playerX playerO)) 9) (declareNoWinner))
 	)
+	
+	; Perform player move
+	(defn playerMoveFirst [event]
+		; Player's choice
+    	(.setText (.getSource event) "O")
+    	(.setEnabled (.getSource event) false)
+    	; Determine which button was clicked and add to moves list.
+    	; Get the selected tile and add to the set
+    	(def selected (. Integer parseInt (.getName (.getSource event))))
+    	(def playerO (conj playerO selected))
+    	(checkGame)
+
+    	; Perform computer actions
+    	; Generate random number
+    	(def available (seq (set/difference allNums (set/union playerX playerO))))
+    	(def tile (nth available (int (math/floor (rand (- (count available) 1))))))
+    	; Redefine playerX with the new selection
+    	(def playerX (conj playerX tile))
+    	; Now just mark the right button with X
+    	; Row 1
+    	(if (= tile 0) (
+    	(fn [] 
+    		(.setText btn_x1y1 "X")
+    		(.setEnabled btn_x1y1 false)
+    	)))
+    	(if (= tile 1) (
+    	(fn [] 
+    		(.setText btn_x1y2 "X")
+    		(.setEnabled btn_x1y2 false)
+    	)))
+    	(if (= tile 2) (
+    	(fn [] 
+    		(.setText btn_x1y3 "X")
+    		(.setEnabled btn_x1y3 false)
+    	)))
+    	; Row 2
+    	(if (= tile 3) (
+    	(fn [] 
+    		(.setText btn_x2y1 "X")
+    		(.setEnabled btn_x2y1 false)
+    	)))
+    	(if (= tile 4) (
+    	(fn [] 
+    		(.setText btn_x2y2 "X")
+    		(.setEnabled btn_x2y2 false)
+    	)))
+    	(if (= tile 5) (
+    	(fn [] 
+    		(.setText btn_x2y3 "X")
+    		(.setEnabled btn_x2y3 false)
+    	)))
+    	; Row 3
+    	(if (= tile 6) (
+    	(fn [] 
+    		(.setText btn_x3y1 "X")
+    		(.setEnabled btn_x3y1 false)
+    	)))
+    	(if (= tile 7) (
+    	(fn [] 
+    		(.setText btn_x3y2 "X")
+    		(.setEnabled btn_x3y2 false)
+    	)))
+    	(if (= tile 8) (
+    	(fn [] 
+    		(.setText btn_x3y3 "X")
+    		(.setEnabled btn_x3y3 false)
+    	)))
+
+    	(checkGame)
+	)
+
+	; Perform computer move
+	(defn computerMoveFirst [event]
+		; Perform computer actions
+    	; Generate random number
+    	(def available (seq (set/difference allNums (set/union playerX playerO))))
+    	(def tile (nth available (int (math/floor (rand (- (count available) 1))))))
+    	; Redefine playerX with the new selection
+    	(def playerX (conj playerX tile))
+    	; Now just mark the right button with X
+    	; Row 1
+    	(if (= tile 0) (
+    	(fn [] 
+    		(.setText btn_x1y1 "X")
+    		(.setEnabled btn_x1y1 false)
+    	)))
+    	(if (= tile 1) (
+    	(fn [] 
+    		(.setText btn_x1y2 "X")
+    		(.setEnabled btn_x1y2 false)
+    	)))
+    	(if (= tile 2) (
+    	(fn [] 
+    		(.setText btn_x1y3 "X")
+    		(.setEnabled btn_x1y3 false)
+    	)))
+    	; Row 2
+    	(if (= tile 3) (
+    	(fn [] 
+    		(.setText btn_x2y1 "X")
+    		(.setEnabled btn_x2y1 false)
+    	)))
+    	(if (= tile 4) (
+    	(fn [] 
+    		(.setText btn_x2y2 "X")
+    		(.setEnabled btn_x2y2 false)
+    	)))
+    	(if (= tile 5) (
+    	(fn [] 
+    		(.setText btn_x2y3 "X")
+    		(.setEnabled btn_x2y3 false)
+    	)))
+    	; Row 3
+    	(if (= tile 6) (
+    	(fn [] 
+    		(.setText btn_x3y1 "X")
+    		(.setEnabled btn_x3y1 false)
+    	)))
+    	(if (= tile 7) (
+    	(fn [] 
+    		(.setText btn_x3y2 "X")
+    		(.setEnabled btn_x3y2 false)
+    	)))
+    	(if (= tile 8) (
+    	(fn [] 
+    		(.setText btn_x3y3 "X")
+    		(.setEnabled btn_x3y3 false)
+    	)))
+
+    	(checkGame)
+
+    	; Player's choice
+    	(.setText (.getSource event) "O")
+    	(.setEnabled (.getSource event) false)
+    	; Determine which button was clicked and add to moves list.
+    	; Get the selected tile and add to the set
+    	(def selected (. Integer parseInt (.getName (.getSource event))))
+    	(def playerO (conj playerO selected))
+    	(checkGame)
+	)
 
 	; Define action listener for the button click
 	(def buttonAction
         (proxy [ActionListener] []
         (actionPerformed [event]
-        	; Player's choice
-        	(.setText (.getSource event) "O")
-        	(.setEnabled (.getSource event) false)
-        	; Determine which button was clicked and add to moves list.
-        	; Get the selected tile and add to the set
-        	(def selected (. Integer parseInt (.getName (.getSource event))))
-        	(def playerO (conj playerO selected))
-        	(checkGame)
-        	; Perform computer actions now
-        	; Generate random number
-        	(def available (seq (set/difference allNums (set/union playerX playerO))))
-        	(def tile (nth available (int (math/floor (rand (- (count available) 1))))))
-        	; Redefine playerX with the new selection
-        	(def playerX (conj playerX tile))
-        	; Now just mark the right button with X
-        	; Row 1
-        	(if (= tile 0) (
-        	(fn [] 
-        		(.setText btn_x1y1 "X")
-        		(.setEnabled btn_x1y1 false)
-        	)))
-        	(if (= tile 1) (
-        	(fn [] 
-        		(.setText btn_x1y2 "X")
-        		(.setEnabled btn_x1y2 false)
-        	)))
-        	(if (= tile 2) (
-        	(fn [] 
-        		(.setText btn_x1y3 "X")
-        		(.setEnabled btn_x1y3 false)
-        	)))
-        	; Row 2
-        	(if (= tile 3) (
-        	(fn [] 
-        		(.setText btn_x2y1 "X")
-        		(.setEnabled btn_x2y1 false)
-        	)))
-        	(if (= tile 4) (
-        	(fn [] 
-        		(.setText btn_x2y2 "X")
-        		(.setEnabled btn_x2y2 false)
-        	)))
-        	(if (= tile 5) (
-        	(fn [] 
-        		(.setText btn_x2y3 "X")
-        		(.setEnabled btn_x2y3 false)
-        	)))
-        	; Row 3
-        	(if (= tile 6) (
-        	(fn [] 
-        		(.setText btn_x3y1 "X")
-        		(.setEnabled btn_x3y1 false)
-        	)))
-        	(if (= tile 7) (
-        	(fn [] 
-        		(.setText btn_x3y2 "X")
-        		(.setEnabled btn_x3y2 false)
-        	)))
-        	(if (= tile 8) (
-        	(fn [] 
-        		(.setText btn_x3y3 "X")
-        		(.setEnabled btn_x3y3 false)
-        	)))
-
-        	(checkGame)
+        ; Determine who goes first
+        (if (= playerStarts true) (playerMoveFirst event) (computerMoveFirst event))
     )))
 
 	; Event listeners
